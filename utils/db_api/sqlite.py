@@ -39,6 +39,46 @@ class Database:
 """
         self.execute(sql, commit=True)
 
+    def create_table_cats(self):
+        sql = """
+        CREATE TABLE Category (
+            id INTEGER PRIMARY KEY,
+            name varchar(255) NOT NULL UNIQUE,
+            desc TEXT,
+            image TEXT NOT NULL
+            );"""
+        self.execute(sql, commit=True)
+
+    def create_table_products(self):
+        sql = """
+        CREATE TABLE Product (
+            id INTEGER PRIMARY KEY,
+            name varchar(255) NOT NULL UNIQUE,
+            desc TEXT NOT NULL,
+            image TEXT NOT NULL,
+            price REAL NOT NULL,
+            cat_id INTEGER NOT NULL
+            );"""
+        self.execute(sql, commit=True)
+
+    def create_table_cart(self):
+        sql = """
+        CREATE TABLE Cart (
+            id INTEGER PRIMARY KEY,
+            user_id INTEGER NOT NULL UNIQUE
+            );"""
+        self.execute(sql, commit=True)
+
+    def create_table_cart_items(self):
+        sql = """
+        CREATE TABLE CartItem (
+            id INTEGER PRIMARY KEY,
+            product_id INTEGER NOT NULL,
+            quantity INTEGER NOT NULL,
+            cart_id INTEGER NOT NULL
+            );"""
+        self.execute(sql, commit=True)
+
     @staticmethod
     def format_args(sql, parameters: dict):
         sql += " AND ".join([
@@ -54,15 +94,67 @@ class Database:
         """
         self.execute(sql, parameters=(id, name, email, language), commit=True)
 
+    def add_user_cart(self, user_id: int):
+        # SQL_EXAMPLE = "INSERT INTO Users(id, Name, email) VALUES(1, 'John', 'John@gmail.com')"
+
+        sql = """
+        INSERT INTO Cart(user_id) VALUES(?)
+        """
+        self.execute(sql, parameters=(user_id,), commit=True)
+
+    def add_cart_item(self, product_id: int, quantity: int, cart_id: int):
+        sql = """
+        INSERT INTO CartItem(product_id, quantity, cart_id) VALUES(?, ?, ?)
+        """
+        self.execute(sql, parameters=(product_id, quantity, cart_id), commit=True)
+
     def select_all_users(self):
         sql = """
         SELECT * FROM Users
         """
         return self.execute(sql, fetchall=True)
 
+    def get_all_items(self, **kwargs):
+        sql = "SELECT product_id, quantity FROM CartItem WHERE "
+        sql, parameters = self.format_args(sql, kwargs)
+
+        return self.execute(sql, parameters=parameters, fetchall=True)
+
+    def select_all_cats(self):
+        sql = """
+        SELECT * FROM Category;
+        """
+        return self.execute(sql, fetchall=True)
+
     def select_user(self, **kwargs):
         # SQL_EXAMPLE = "SELECT * FROM Users where id=1 AND Name='John'"
         sql = "SELECT * FROM Users WHERE "
+        sql, parameters = self.format_args(sql, kwargs)
+
+        return self.execute(sql, parameters=parameters, fetchone=True)
+
+    def select_cart(self, **kwargs):
+        # SQL_EXAMPLE = "SELECT * FROM Users where id=1 AND Name='John'"
+        sql = "SELECT * FROM Cart WHERE "
+        sql, parameters = self.format_args(sql, kwargs)
+
+        return self.execute(sql, parameters=parameters, fetchone=True)
+
+    def get_category(self, **kwargs):
+        # SQL_EXAMPLE = "SELECT * FROM Users where id=1 AND Name='John'"
+        sql = "SELECT * FROM Category WHERE "
+        sql, parameters = self.format_args(sql, kwargs)
+
+        return self.execute(sql, parameters=parameters, fetchone=True)
+
+    def select_all_products(self, **kwargs):
+        sql = "SELECT * FROM Product WHERE "
+        sql, parameters = self.format_args(sql, kwargs)
+
+        return self.execute(sql, parameters=parameters, fetchall=True)
+
+    def get_product_data(self, **kwargs):
+        sql = "SELECT * FROM Product WHERE "
         sql, parameters = self.format_args(sql, kwargs)
 
         return self.execute(sql, parameters=parameters, fetchone=True)
