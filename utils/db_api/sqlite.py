@@ -79,6 +79,27 @@ class Database:
             );"""
         self.execute(sql, commit=True)
 
+    def create_table_cart_zakazlar(self):
+        sql = """
+        CREATE TABLE zakazlar (
+            id INTEGER PRIMARY KEY,
+            user_id INTEGER NOT NULL,
+            total_price REAL NOT NULL,
+            lat REAL NOT NULL,
+            lon REAL NOT NULL,
+            adres TEXT NOT NULL,
+            phone VARCHAR(15) NOT NULL,
+            totol_product TEXT NOT NULL,
+            date TEXT NOT NULL,
+            tolandi BLOB NOT NULL
+            );"""
+        self.execute(sql, commit=True)
+
+
+
+
+
+
     @staticmethod
     def format_args(sql, parameters: dict):
         sql += " AND ".join([
@@ -102,11 +123,50 @@ class Database:
         """
         self.execute(sql, parameters=(user_id,), commit=True)
 
+    def add_order(self, user_id: int, total_price: float, lat: float, lon: float, adres: str, phone: str, totol_product: str, date: str, tolandi: bool):
+        sql = """
+        INSERT INTO zakazlar(user_id, total_price, lat, lon, adres, phone, totol_product, date, tolandi) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """
+        self.execute(sql=sql, parameters=(user_id, total_price, lat, lon, adres, phone, totol_product, date, tolandi), commit=True)
+        
+
+
+
+    def cheak_zakaz(self, user_id):
+        sql = """
+        SELECT * FROM zakazlar WHERE user_id=?
+        ;"""
+        return self.execute(sql=sql, parameters=(user_id,), fetchall=True)
+
+
+
+
+
     def add_cart_item(self, product_id: int, quantity: int, cart_id: int):
         sql = """
         INSERT INTO CartItem(product_id, quantity, cart_id) VALUES(?, ?, ?)
         """
         self.execute(sql, parameters=(product_id, quantity, cart_id), commit=True)
+
+
+
+
+    def cheak_cart_product(self, product_id: int, cart_id: int):
+        sql = """SELECT * FROM CartItem WHERE product_id=? AND cart_id=?;"""
+        return self.execute(sql=sql, parameters=(product_id, cart_id), fetchone=True)
+
+    def cheaked_card_update(self, product_id: int, quantity: int, cart_id: int):
+        sql = """UPDATE CartItem SET quantity=?   WHERE product_id=? AND cart_id=?;"""
+        return self.execute(sql, parameters=(quantity, product_id, cart_id), commit=True)
+
+    def delete_all_product_from_cart(self, cart_id):
+        sql = """DELETE FROM CartItem WHERE cart_id=?;"""
+        self.execute(sql=sql, parameters=(cart_id,), commit=True)
+
+    def delete_product_from_cart(self, product_id, cart_id):
+        sql = """DELETE FROM CartItem WHERE product_id=? AND cart_id=?;"""
+        self.execute(sql=sql, parameters=(product_id, cart_id), commit=True)
+
 
     def select_all_users(self):
         sql = """

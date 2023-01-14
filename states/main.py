@@ -5,3 +5,5 @@ class ShopState(StatesGroup):
     category = State()
     product = State()
     amount = State()
+    cart = State()
+    tolov = State()

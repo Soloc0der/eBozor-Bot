@@ -13,6 +13,6 @@ async def get_products_by_category(message: types.Message, state: FSMContext):
     await state.update_data({
         "cat_id": cat_id
     })
-    await message.answer(f"{category_name} kategoriyasidagi mahsulotlar", reply_markup=markup)
+    await message.answer(f"{category_name} - Kategoriyasidagi Telefonlar 🫡", reply_markup=markup)
     await ShopState.next()
 
