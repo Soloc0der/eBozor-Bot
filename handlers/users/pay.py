@@ -3,10 +3,6 @@ from loader import dp, db
 from aiogram.dispatcher.storage import FSMContext
 from keyboards.default.menu import *
 from states.main import ShopState
-from geopy.geocoders import Nominatim
-from datetime import datetime
-from utils.misc.product import Product
-
 
 
 
