@@ -8,6 +8,7 @@ from loader import dp, db, bot
 from keyboards.default.menu import main_menu
 
 
+
 @dp.message_handler(CommandStart(), state="*")
 async def bot_start(message: types.Message, state: FSMContext):
     await state.finish()
