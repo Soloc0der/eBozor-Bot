@@ -26,13 +26,24 @@ async def get_all_users(message: types.Message):
        await bot.send_message(message.chat.id, df)
        
 
+
 @dp.message_handler(text="/reklama", user_id=ADMINS, state="*")
 async def send_ad_to_all(message: types.Message):
     users = db.select_all_users()
     for user in users:
         user_id = user[0]
-        await bot.send_message(chat_id=user_id, text="nothing")
+        await bot.send_message(chat_id=user_id, text="@solo_coder obuna bolib qoyamiz...")
         await asyncio.sleep(0.05)
+
+@dp.message_handler(text="/update", user_id=ADMINS, state="*")
+async def send_ad_to_all(message: types.Message):
+    users = db.select_all_users()
+    for user in users:
+        user_id = user[0]
+        await bot.send_message(chat_id=user_id, text="Bot yangilandi😍\n\nbotdan foydalanish uchun qaytadan /start buyrug'ini bering...")
+        await asyncio.sleep(0.05)
+
+
 
 @dp.message_handler(text="/cleandb", user_id=ADMINS,state="*")
 async def get_all_users(message: types.Message):

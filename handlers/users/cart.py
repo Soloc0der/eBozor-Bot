@@ -24,7 +24,7 @@ async def get_cart_items(message: types.Message, state: FSMContext):
         await message.answer(msg, reply_markup=cart_products_murkub(items))
         await ShopState.cart.set()    
     else:
-        await message.answer("Sizni <b>KARZINKA</b>ngiz hali bo'sh ☹️\nKeling endi uni qaytadan To'ldiramiz... 🙃")
+        await message.answer("Sizni <b>KARZINKA</b>ngiz hali bo'sh ☹️\nKeling, endi uni qaytadan To'ldiramiz... 🙃")
 
 
 
@@ -37,7 +37,7 @@ async def  karzinkani_tozalash(message: types.Message, state : FSMContext):
     user_id = message.from_user.id
     cart_id = db.select_cart(user_id=user_id)[0]
     db.delete_all_product_from_cart(cart_id=cart_id)
-    await message.reply("<b>Siz karzinkani tozalab tashladingiz </b>😌\nKeling endi uni qaytadan To'ldiramiz... 🙃", reply_markup=main_menu)
+    await message.reply("<b>Siz karzinkani tozalab tashladingiz </b>😌\nKeling, endi uni qaytadan To'ldiramiz... 🙃", reply_markup=main_menu)
     await state.finish()
 
 
@@ -95,7 +95,7 @@ async def tasdiqlash(message: types.Message, state: FSMContext):
     now = datetime.now()
     ordertime = str(datetime.time(now))
     orderdate = str(datetime.date(now))
-    date = f"{orderdate} | {ordertime[:7]}" 
+    date = f"{orderdate} | {ordertime[:8]}" 
     db.add_order(user_id=user_id, total_price=total_price,lat=lat,lon=lon,adres=adres,phone=phone, totol_product=totol_product, date=date, tolandi=False)
     db.delete_all_product_from_cart(cart_id=cart_id)
     msg += f"umumiy hisob : {total_price}\n\nBUYURTMAGIZ SAQLANDI,\n To'lovni «Buyurtmalarim 📂» bo'limidan qilishingiz mumkin  😸"

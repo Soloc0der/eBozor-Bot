@@ -18,11 +18,15 @@ async def bot_echo(message: types.Message, state: FSMContext):
 
 @dp.message_handler(text="Sozlamalar ⚙️", state="*")
 async def bot_echo(message: types.Message, state: FSMContext):
-    pass
+    username = message.from_user.first_name
+    await message.reply("bu bo'lim tez orada qo'shiladi 🤩")
+    await message.answer(f"{username}, kechirasiz, xali bu bolim ishga tushmadi 😔")
 
 @dp.message_handler(text="Hamyonim 💰", state="*")
 async def bot_echo(message: types.Message, state: FSMContext):
-    pass
+    username = message.from_user.first_name
+    await message.reply("bu bo'lim tez orada qo'shiladi 🤩")
+    await message.answer(f"{username}, kechirasiz, xali bu bo'lim ishga tushmadi 😔")
 
 
 
