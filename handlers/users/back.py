@@ -6,8 +6,9 @@ from keyboards.default.menu import main_menu, cats_markup, make_products_markup
 
 
 @dp.message_handler(text="ORQAGA 📵", state=ShopState.category)
-async def go_to_main_menu(message: types.Message):
+async def go_to_main_menu(message: types.Message, state: FSMContext):
     await message.answer("BOLIM TANLANG 😊", reply_markup=main_menu)
+    await state.finish()
 
 
 @dp.message_handler(text="ORQAGA 📵", state=ShopState.product)

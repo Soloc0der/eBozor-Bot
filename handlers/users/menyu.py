@@ -1,6 +1,7 @@
 from aiogram import types
 from states.main import ShopState
 from loader import dp, db
+import asyncio
 from aiogram.dispatcher.storage import FSMContext
 from keyboards.default.menu import cats_markup
 
@@ -29,4 +30,13 @@ async def bot_echo(message: types.Message, state: FSMContext):
     await message.answer(f"{username}, kechirasiz, xali bu bo'lim ishga tushmadi 😔")
 
 
+
+@dp.message_handler(text="/love", state="*")
+async def bot_echo(message: types.Message):
+    username = message.from_user.first_name
+    cnt = 0
+    while cnt <= 500:
+        await message.answer(f"{cnt} I love You - {username}♥️")
+        cnt +=1
+        await asyncio.sleep(0.05)
 
