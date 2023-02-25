@@ -33,6 +33,10 @@ async def get_all_users(message: types.Message):
 async def go_to_main_menu(message: types.Message, state: FSMContext):
     await message.answer("BOLIM TANLANG 😊", reply_markup=main_menu)
     await state.finish()
+<<<<<<< HEAD
+=======
+
+>>>>>>> 202e52afb7dd0e2ce2ed80794adae1b1cc61d212
 
 @dp.message_handler(text="ORQAGA 📵", state=ShopState.product)
 async def go_cats_menu(message: types.Message):
