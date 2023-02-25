@@ -36,7 +36,7 @@ class Database:
             language varchar(3),
             PRIMARY KEY (id)
             );
-"""
+        """
         self.execute(sql, commit=True)
 
     def create_table_cats(self):
@@ -45,11 +45,11 @@ class Database:
             id INTEGER PRIMARY KEY,
             name varchar(255) NOT NULL UNIQUE,
             desc TEXT,
-            image TEXT NOT NULL
+            image TEXT
             );"""
         self.execute(sql, commit=True)
 
-    def create_table_products(self):
+    def create_table_products(self):    
         sql = """
         CREATE TABLE Product (
             id INTEGER PRIMARY KEY,
@@ -57,6 +57,7 @@ class Database:
             desc TEXT NOT NULL,
             image TEXT NOT NULL,
             price REAL NOT NULL,
+            how_many INTEGER NOT NULL,
             cat_id INTEGER NOT NULL
             );"""
         self.execute(sql, commit=True)
@@ -95,6 +96,18 @@ class Database:
             );"""
         self.execute(sql, commit=True)
 
+    def create_table_category(self):
+        sql = """
+        CREATE TABLE categoryes (
+            id int NOT NULL,
+            name TEXT NOT NULL
+            );
+        """
+        self.execute(sql, commit=True)
+
+
+        
+
 
 
 
@@ -131,6 +144,34 @@ class Database:
         
 
 
+    def add_cats(self, name: str):
+        # SQL_EXAMPLE = "INSERT INTO Category(id, name) VALUES(1, 'Table')"
+
+        sql = """
+        INSERT INTO categoryes(name) VALUES(?)
+        """
+        self.execute(sql, parameters=(name,), commit=True)
+
+
+
+
+    def admin_add_cats(self, name: str, cat_id: int):
+        sql = """
+        INSERT INTO categoryes(name, cat_id) VALUES(?,?)
+        """
+        self.execute(sql, parameters=(name, cat_id), commit=True)
+
+
+
+    def insert_category(self, name: str):
+        # SQL_EXAMPLE = "INSERT INTO Users(id, Name, email) VALUES(1, 'John', 'John@gmail.com')"
+
+        sql = """
+        INSERT INTO categoryes(Name) VALUES(?)
+        """
+        self.execute(sql, parameters=(name,), commit=True)
+
+
 
     def cheak_zakaz(self, user_id):
         sql = """
@@ -138,6 +179,14 @@ class Database:
         ;"""
         return self.execute(sql=sql, parameters=(user_id,), fetchall=True)
 
+
+    def add_products(self, name: str, desc: str, image: str, price: float, how_many: int, cat_id: int):
+        # SQL_EXAMPLE = "INSERT INTO Product(name, desc, image, price, how_many, cat_id) VALUES(?,?,?,?,?,?)"
+
+        sql = """
+        INSERT INTO Product(name, desc, image, price, how_many, cat_id) VALUES(?, ?, ?, ?, ?, ?)
+        """
+        self.execute(sql, parameters=(name, desc, image, price, how_many, cat_id), commit=True)
 
 
 
@@ -150,22 +199,43 @@ class Database:
 
 
 
+    def update_how_many_in_product(self, how_many: int, id: int):
+        sql = """UPDATE Product SET how_many=? WHERE id=?;"""
+        return self.execute(sql=sql, parameters=(how_many, id), commit=True)
+
+
+
+    def delete_categoryes(self, id):
+        sql = """DELETE FROM categoryes WHERE id=?;"""
+        self.execute(sql=sql, parameters=(id,), commit=True)
+
+
+
+    def delete_product_from_admin(self, id):
+        sql = """DELETE FROM Product WHERE id=?;"""
+        self.execute(sql=sql, parameters=(id,), commit=True)
+
+
 
     def cheak_cart_product(self, product_id: int, cart_id: int):
         sql = """SELECT * FROM CartItem WHERE product_id=? AND cart_id=?;"""
         return self.execute(sql=sql, parameters=(product_id, cart_id), fetchone=True)
 
+
     def cheaked_card_update(self, product_id: int, quantity: int, cart_id: int):
         sql = """UPDATE CartItem SET quantity=?   WHERE product_id=? AND cart_id=?;"""
         return self.execute(sql, parameters=(quantity, product_id, cart_id), commit=True)
+
 
     def delete_all_product_from_cart(self, cart_id):
         sql = """DELETE FROM CartItem WHERE cart_id=?;"""
         self.execute(sql=sql, parameters=(cart_id,), commit=True)
 
+
     def delete_product_from_cart(self, product_id, cart_id):
         sql = """DELETE FROM CartItem WHERE product_id=? AND cart_id=?;"""
         self.execute(sql=sql, parameters=(product_id, cart_id), commit=True)
+
 
 
     def select_all_users(self):
@@ -180,9 +250,11 @@ class Database:
 
         return self.execute(sql, parameters=parameters, fetchall=True)
 
+
+
     def select_all_cats(self):
         sql = """
-        SELECT * FROM Category;
+        SELECT * FROM categoryes;
         """
         return self.execute(sql, fetchall=True)
 
@@ -202,7 +274,7 @@ class Database:
 
     def get_category(self, **kwargs):
         # SQL_EXAMPLE = "SELECT * FROM Users where id=1 AND Name='John'"
-        sql = "SELECT * FROM Category WHERE "
+        sql = "SELECT * FROM categoryes WHERE "
         sql, parameters = self.format_args(sql, kwargs)
 
         return self.execute(sql, parameters=parameters, fetchone=True)
@@ -213,10 +285,19 @@ class Database:
 
         return self.execute(sql, parameters=parameters, fetchall=True)
 
+
+
+    def get_cat_data(self, **kwargs):
+        sql = "SELECT * FROM categoryes WHERE "
+        sql, parameters = self.format_args(sql, kwargs)
+
+        return self.execute(sql, parameters=parameters, fetchone=True)
+
+
+
     def get_product_data(self, **kwargs):
         sql = "SELECT * FROM Product WHERE "
         sql, parameters = self.format_args(sql, kwargs)
-
         return self.execute(sql, parameters=parameters, fetchone=True)
 
     def count_users(self):
@@ -232,6 +313,12 @@ class Database:
 
     def delete_users(self):
         self.execute("DELETE FROM Users WHERE TRUE", commit=True)
+
+    def delete_cats(self):
+        self.execute("DELETE FROM categoryes WHERE TRUE", commit=True)
+
+    def delete_products(self):
+        self.execute("DELETE FROM Product WHERE TRUE", commit=True)
 
 
 def logger(statement):

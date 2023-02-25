@@ -17,14 +17,15 @@ async def get_cart_items(message: types.Message, state: FSMContext):
         total_price = 0
         for item in items:
             data = db.get_product_data(id=item[0])
-            price = data[-2] * item[1]
-            msg += f"<b>{data[1]} - </b> 📱 \n   {data[-2]} x {item[1]} = {price} so'm ✅\n\n"
+            price = data[-3] * item[1]
+            msg += f"<b>{data[1]} - </b> 📱 \n   {data[-3]} x {item[1]} = {price} so'm ✅\n\n"
             total_price += price
         msg += f"Lar bor 😇\n\nUmumiy hisob: {total_price} so'm"  
         await message.answer(msg, reply_markup=cart_products_murkub(items))
-        await ShopState.cart.set()    
+        await ShopState.cart.set()
     else:
-        await message.answer("Sizni <b>KARZINKA</b>ngiz hali bo'sh ☹️\nKeling, endi uni qaytadan To'ldiramiz... 🙃")
+        await message.answer("Sizni <b>KARZINKA</b>ngiz hali bo'sh ☹️\nKeling, endi uni qaytadan To'ldiramiz... 🙃", reply_markup=main_menu)
+        await state.finish()
 
 
 
@@ -88,10 +89,10 @@ async def tasdiqlash(message: types.Message, state: FSMContext):
 
     for item in items:
         data = db.get_product_data(id=item[0])
-        price = data[-2] * item[1]  
+        price = data[-3] * item[1]  
         total_price += price
-        totol_product += f"{data[1]} : {data[-2]} x {item[1]} = {price} so'm\n"
-        msg += f"<code>{data[1]} :   {data[-2]} x {item[1]} = {price} so'm</code>\n\n"
+        totol_product += f"{data[1]} : {data[-3]} x {item[1]} = {price} so'm\n"
+        msg += f"<code>{data[1]} :   {data[-3]} x {item[1]} = {price} so'm</code>\n\n"
     now = datetime.now()
     ordertime = str(datetime.time(now))
     orderdate = str(datetime.date(now))
@@ -123,36 +124,42 @@ async def get_phone_location(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(state=ShopState.cart)
-async def telefonlarni_karzinkadan_ochirish(message: types.Message):
+async def telefonlarni_karzinkadan_ochirish(message: types.Message, state: FSMContext):
+
 
     if message.text == "🟥 BEKOR QILISH 🟥":
         await message.answer("BUYURTMA BEKOR QILONDI 😥", reply_markup=main_menu)
         await ShopState.category.set()
     else:
         telefon_list = message.text.split()
-        telefon = ""    
+        telefon = ""
         telefon += telefon_list[1] + " " + telefon_list[2]
-        telefon_id = db.get_product_data(name=telefon)[0]
+        product_id = db.get_product_data(name=telefon)[0]
 
         user_id = message.from_user.id
         cart_id = db.select_cart(user_id=user_id)[0]
 
-        db.delete_product_from_cart(product_id=telefon_id, cart_id=cart_id)
+        how_many_in_cart = (db.cheak_cart_product(product_id=int(product_id), cart_id=cart_id))[-2]
+        how_many = db.get_product_data(name=telefon)[-2]
+        db.delete_product_from_cart(product_id=product_id, cart_id=cart_id)
+        db.update_how_many_in_product(how_many=how_many+how_many_in_cart, id=product_id)
+
+
         items = db.get_all_items(cart_id=cart_id)
         if items:
             msg = "<b>Ayni paytda karzinkada :</b>\n\n"
             total_price = 0
             for item in items:
                 data = db.get_product_data(id=item[0])
-                price = data[-2] * item[1]
-                msg += f"<b>{data[1]} - </b> 📱 \n   {data[-2]} x {item[1]} = {price} so'm ✅\n\n"
+                price = data[4] * item[1]
+                msg += f"<b>{data[1]} - </b> 📱 \n   {data[4]} x {item[1]} = {price} so'm ✅\n\n"
                 total_price += price
-            msg += f"Lar bor 😇\n\nUmumiy hisob: {total_price} so'm"  
+            msg += f"Lar bor 😇\n\nUmumiy hisob: {total_price} so'm" 
             await message.answer(msg, reply_markup=cart_products_murkub(items))
             await ShopState.cart.set()    
         else:
-            await message.answer("Sizni <b>KARZINKA</b>ngizni bo'shatdingiz ☹️\n\nKeling endi uni qaytadan To'ldiramiz... 🙃", reply_markup=cats_markup)
-            await ShopState.category.set()
+            await message.answer("Sizni <b>KARZINKA</b>ngizni bo'shatdingiz ☹️\n\nKeling endi uni qaytadan To'ldiramiz... 🙃", reply_markup=main_menu)
+            await state.finish()
 
 
 
