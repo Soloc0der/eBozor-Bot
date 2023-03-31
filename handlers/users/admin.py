@@ -313,8 +313,14 @@ async def get_all_users(message: types.Message):
 
 @dp.message_handler(user_id=ADMINS, state=ShopState.insert_category)
 async def get_all_users(message: types.Message, state: FSMContext):
+
     name = message.text
-    cat_id = (db.select_all_cats()[-1][-1]) + 1
+    cnt_cats = db.select_all_cats()
+    if len(cnt_cats) == 0:
+        print(cnt_cats)
+        cat_id = 1
+    else:
+        cat_id = (db.select_all_cats()[-1][-1]) + 1
     db.admin_add_cats(name=name, cat_id=cat_id)
     await message.reply(f"{name} - bazaga muvofaqiyatli qo'shildi ✅✅", reply_markup=admin)
     await ShopState.admin_panel.set()
