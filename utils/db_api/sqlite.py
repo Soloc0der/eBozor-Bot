@@ -39,6 +39,20 @@ class Database:
         """
         self.execute(sql, commit=True)
 
+
+    def create_table_Profile(self):
+        sql = """
+        CREATE TABLE Profile (
+            id int NOT NULL,
+            name varchar(20),
+            username varchar(100),
+            photo TEXT,
+            phone INT,
+            loc varchar(100)
+        );
+        """
+        self.execute(sql, commit=True)
+
     def create_table_cats(self):
         sql = """
         CREATE TABLE Category (
@@ -122,11 +136,16 @@ class Database:
 
     def add_user(self, id: int, name: str, email: str = None, language: str = 'uz'):
         # SQL_EXAMPLE = "INSERT INTO Users(id, Name, email) VALUES(1, 'John', 'John@gmail.com')"
-
         sql = """
         INSERT INTO Users(id, Name, email, language) VALUES(?, ?, ?, ?)
         """
         self.execute(sql, parameters=(id, name, email, language), commit=True)
+
+    def add_profile(self, id: int, name: str,  username: str, photo: str = None, phone: int = None, loc: str = None):
+        sql = """
+        INSERT INTO Profile(id, name, username, photo, phone, loc) VALUES(?, ?, ?, ?, ?, ?)
+        """
+        self.execute(sql, parameters=(id,name, username, photo, phone, loc), commit=True)
 
     def add_user_cart(self, user_id: int):
         # SQL_EXAMPLE = "INSERT INTO Users(id, Name, email) VALUES(1, 'John', 'John@gmail.com')"
@@ -313,6 +332,12 @@ class Database:
 
     def delete_users(self):
         self.execute("DELETE FROM Users WHERE TRUE", commit=True)
+
+    def delete_Carts(self):
+        self.execute("DELETE FROM Cart WHERE TRUE", commit=True)
+        
+    def delete_Cart_items(self):
+        self.execute("DELETE FROM CartItem WHERE TRUE", commit=True)
 
     def delete_cats(self):
         self.execute("DELETE FROM categoryes WHERE TRUE", commit=True)

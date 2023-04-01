@@ -6,8 +6,7 @@ from utils.set_bot_commands import set_default_commands
 
 async def on_startup(dispatcher):
     # Birlamchi komandalar (/start va /help)
-    await set_default_commands(dispatcher)      
-
+    await set_default_commands(dispatcher)  
     await on_startup_notify(dispatcher)
 
 if __name__ == '__main__':

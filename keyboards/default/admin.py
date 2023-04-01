@@ -3,8 +3,7 @@ from loader import db
 
 admin = ReplyKeyboardMarkup(resize_keyboard=True)
 back_btn = KeyboardButton(text="ORQAGA 📵")
-back_btn = KeyboardButton(text="ORQAGA 📵")
-
+photo_back = KeyboardButton(text="ORQAGA 📵")
 
 bkr_btn = KeyboardButton(text="Bekor qilish 📄")
 

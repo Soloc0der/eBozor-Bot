@@ -7,7 +7,7 @@ from states.main import *
 from keyboards.default.admin import *
 from aiogram.dispatcher.storage import FSMContext
 from keyboards.default.menu import main_menu
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 
 
 
@@ -216,6 +216,8 @@ async def get_all_users(message: types.Message):
     db.delete_users()
     db.delete_cats()
     db.delete_products()
+    db.delete_Cart_items()
+    db.delete_Carts()
     await message.answer("Bazadan Hammasi tozalandi ✅", reply_markup=admin)
     await ShopState.admin_panel.set()
 
@@ -246,7 +248,7 @@ async def reklamasorash(message: types.Message):
 
 @dp.message_handler(text="Text 📣", user_id=ADMINS, state=Admin.reklama)
 async def reklamatext(message: types.Message):
-    await message.answer("Reklama bo'limiga o'tdingiz 😁\n\nFoydalanuvchilarga tarqatmoqchi bo'lgan REKLAMA ngizni Text korinishida menga yuboring 😎", reply_markup=back_btn)
+    await message.answer("Reklama bo'limiga o'tdingiz 😁\n\nFoydalanuvchilarga tarqatmoqchi bo'lgan REKLAMA ngizni Text korinishida menga yuboring 😎", reply_markup=photo_back)
     await Admin.text_rek.set()
 
 
@@ -263,14 +265,14 @@ async def reklamatexttarqat(message: types.Message):
             user_id = user[0]
             await bot.send_message(chat_id=user_id, text=msg)
             await asyncio.sleep(0.05)
-        await bot.send_message(chat_id=ADMINS[0], text="Reklama xammaga tarqatildi 🙋‍♂️", reply_markup=main_menu)
+        await bot.send_message(chat_id=ADMINS[0], text="Reklama xammaga tarqatildi 🙋‍♂️", reply_markup=admin)
         await ShopState.admin_panel.set()
 
 
 
 @dp.message_handler(text="Photo 🖼", user_id=ADMINS, state=Admin.reklama)
 async def reklamaphoto(message: types.Message):
-    await message.answer("Reklama bo'limiga o'tdingiz 😁\n\nFoydalanuvchilarga tarqatmoqchi bo'lgan REKLAMA ngizni # Rasm # korinishida menga yuboring 😎\n {text ishlatsa xam bolad }", reply_markup=back_btn)
+    await message.answer("Reklama bo'limiga o'tdingiz 😁\n\nFoydalanuvchilarga tarqatmoqchi bo'lgan REKLAMA ngizni # Rasm # korinishida menga yuboring 😎\n {text ishlatsa xam bolad }", reply_markup=photo_back)
     await Admin.photo_rek.set()
 
 
@@ -282,11 +284,11 @@ async def get_photoreklama(message: types.Message):
     users = db.select_all_users()
     for user in users:
         user_id = user[0]
-        await bot.send_photo(chat_id=user_id, photo=photo, caption=msg, reply_markup=admin)
+        await bot.send_photo(chat_id=user_id, photo=photo, caption=msg)
         await asyncio.sleep(0.05)
 
     await ShopState.admin_panel.set()
-    await bot.send_message(chat_id=ADMINS[0], text="Reklama xammaga tarqatildi 🙋‍♂️", reply_markup=main_menu)
+    await bot.send_message(chat_id=ADMINS[0], text="Reklama xammaga tarqatildi 🙋‍♂️", reply_markup=admin)
 
 
 
@@ -337,6 +339,7 @@ async def get_all_users(message: types.Message, state: FSMContext):
 
 @dp.message_handler(text="Telefon 📲", user_id=ADMINS, state=ShopState.admin_panel)
 async def get_all_users(message: types.Message):
+
     await message.answer("<b>Telefon Qo'shish bo'limi ... </b>\n\nDemak tushuntiraman: \n\n   Siz yangi telefon qo'shmoqchisiz\n\nbunda sizdan talab qilinad:\nMahsulot Nomi ?\nMahsulot haqida ?\nMahsulot rasmi ?\nMahsulot Bahosi ? \nMahsulotdan nechta mavjud ekanligi ?\nMahsulot qaysi model dan ekanligi ?\n\nXozir Mahsulot - Nomini - kiriting ...", reply_markup=add_modell)
     await Admin.get_name.set()
 
@@ -377,36 +380,42 @@ async def get_photo(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=Admin.get_price)
 async def product_desc(message: types.Message, state: FSMContext):
-    max_price = message.text
-    await state.update_data({
-        "max_price": max_price
-    })
-    await message.answer(f"Endi Mahsulot miqdorini yani qancha ekanligini Yuboring...!!!")
-    await Admin.get_hm.set()
-
+    if message.text.isdigit():
+        max_price = message.text
+        await state.update_data({
+            "max_price": max_price
+        })
+        await message.answer(f"Endi Mahsulot miqdorini yani qancha ekanligini Yuboring...!!!")
+        await Admin.get_hm.set()
+    else:
+        await message.answer(f"Iltimos Narxni Butun Son ko'rinishida yozing...\n\n (. , - ishlatilmasin)")
+    
 
 
 @dp.message_handler(state=Admin.get_hm)
 async def product_desc(message: types.Message, state: FSMContext):
-    max_hm = message.text
-    await state.update_data({
-        "max_hm": max_hm
-    })
+    if message.text.isdigit():
+        max_hm = message.text
+        await state.update_data({
+            "max_hm": max_hm
+        })
+            #------ cats -----
+        admin_cats = db.select_all_cats()
+        admin_cats_markup = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+        for cat in admin_cats:
+            admin_cats_markup.insert(KeyboardButton(text=cat[1]))
+        #--------- cats -----
 
 
 
-    #------ cats -----
-    admin_cats = db.select_all_cats()
-    admin_cats_markup = ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
-    for cat in admin_cats:
-        admin_cats_markup.insert(KeyboardButton(text=cat[1]))
-    #--------- cats -----
+        await message.answer(f"Endi Mahsulot qaysi model dan ekanligi TANLANG...!!!", reply_markup=admin_cats_markup)
+        await Admin.get_cat_id.set()
+
+    else:
+        await message.answer(f"Iltimos Narxni Butun Son ko'rinishida yozing...\n\n (. , - ishlatilmasin)")
 
 
-
-    await message.answer(f"Endi Mahsulot qaysi model dan ekanligi TANLANG...!!!", reply_markup=admin_cats_markup)
-    await Admin.get_cat_id.set()
-
+ 
 
 
 @dp.message_handler(state=Admin.get_cat_id)

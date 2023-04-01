@@ -73,14 +73,26 @@ async def go_to_cats_menu(message: types.Message, state: FSMContext):
 
 
 
-dp.message_handler(text="🟥 BEKOR QILISH 🟥", state="*")
+@dp.message_handler(text="🟥 BEKOR QILISH 🟥", state="*")
 async def cancrel_order(message: types.Message, state: FSMContext):
     await message.answer("BUYURTMA BEKOR QILONDI 😥", reply_markup=main_menu)
     await state.finish()
 
-    
-dp.message_handler(text="‼️BEKOR QILISH‼️", state=Admin.reklama)
+
+
+@dp.message_handler(text="ORQAGA 📵", state=Admin.photo_rek)
 async def cancrel_order(message: types.Message, state: FSMContext):
     await message.answer("reklama BEKOR QILONDI 😥", reply_markup=admin)
     await ShopState.admin_panel.set()
 
+
+
+@dp.message_handler(text="ORQAGA 📵", state=Admin.reklama)
+async def cancrel_order(message: types.Message, state: FSMContext):
+    await message.answer("reklama BEKOR QILONDI 😥", reply_markup=admin)
+    await ShopState.admin_panel.set()
+
+@dp.message_handler(text="‼️BEKOR QILISH‼️", state=Admin.reklama)
+async def cancrel_order(message: types.Message, state: FSMContext):
+    await message.answer("reklama BEKOR QILONDI 😥", reply_markup=admin)
+    await ShopState.admin_panel.set()

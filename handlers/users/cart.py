@@ -131,35 +131,42 @@ async def telefonlarni_karzinkadan_ochirish(message: types.Message, state: FSMCo
         await message.answer("BUYURTMA BEKOR QILONDI 😥", reply_markup=main_menu)
         await ShopState.category.set()
     else:
-        telefon_list = message.text.split()
-        telefon = ""
-        telefon += telefon_list[1] + " " + telefon_list[2]
-        product_id = db.get_product_data(name=telefon)[0]
+        try:
+            katrzinka_tel_list = message.text.split()
+            telefon_list = katrzinka_tel_list[1:-1]
+            telefon_for = ""
+            for i in telefon_list:
+                telefon_for += i + " "
+                print(telefon_for, type(telefon_for))
+            telefon = telefon_for[:-1]
+            
+            product_id = db.get_product_data(name=telefon)[0]
 
-        user_id = message.from_user.id
-        cart_id = db.select_cart(user_id=user_id)[0]
+            user_id = message.from_user.id
+            cart_id = db.select_cart(user_id=user_id)[0]
 
-        how_many_in_cart = (db.cheak_cart_product(product_id=int(product_id), cart_id=cart_id))[-2]
-        how_many = db.get_product_data(name=telefon)[-2]
-        db.delete_product_from_cart(product_id=product_id, cart_id=cart_id)
-        db.update_how_many_in_product(how_many=how_many+how_many_in_cart, id=product_id)
+            how_many_in_cart = (db.cheak_cart_product(product_id=int(product_id), cart_id=cart_id))[-2]
+            how_many = db.get_product_data(name=telefon)[-2]
+            db.delete_product_from_cart(product_id=product_id, cart_id=cart_id)
+            db.update_how_many_in_product(how_many=how_many+how_many_in_cart, id=product_id)
 
 
-        items = db.get_all_items(cart_id=cart_id)
-        if items:
-            msg = "<b>Ayni paytda karzinkada :</b>\n\n"
-            total_price = 0
-            for item in items:
-                data = db.get_product_data(id=item[0])
-                price = data[4] * item[1]
-                msg += f"<b>{data[1]} - </b> 📱 \n   {data[4]} x {item[1]} = {price} so'm ✅\n\n"
-                total_price += price
-            msg += f"Lar bor 😇\n\nUmumiy hisob: {total_price} so'm" 
-            await message.answer(msg, reply_markup=cart_products_murkub(items))
-            await ShopState.cart.set()    
-        else:
-            await message.answer("Sizni <b>KARZINKA</b>ngizni bo'shatdingiz ☹️\n\nKeling endi uni qaytadan To'ldiramiz... 🙃", reply_markup=main_menu)
-            await state.finish()
-
+            items = db.get_all_items(cart_id=cart_id)
+            if items:
+                msg = "<b>Ayni paytda karzinkada :</b>\n\n"
+                total_price = 0
+                for item in items:
+                    data = db.get_product_data(id=item[0])
+                    price = data[4] * item[1]
+                    msg += f"<b>{data[1]} - </b> 📱 \n   {data[4]} x {item[1]} = {price} so'm ✅\n\n"
+                    total_price += price
+                msg += f"Lar bor 😇\n\nUmumiy hisob: {total_price} so'm" 
+                await message.answer(msg, reply_markup=cart_products_murkub(items))
+                await ShopState.cart.set()    
+            else:
+                await message.answer("Sizni <b>KARZINKA</b>ngizni bo'shatdingiz ☹️\n\nKeling endi uni qaytadan To'ldiramiz... 🙃", reply_markup=main_menu)
+                await state.finish()
+        except:
+            await message.answer("Savatcha Da bunday mahsulot mavjud emas...")
 
 
