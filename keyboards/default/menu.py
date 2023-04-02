@@ -6,7 +6,7 @@ main_menu = ReplyKeyboardMarkup(resize_keyboard=True)
 
 main_menu.row("PHONE 📱")
 main_menu.row("Karzinka 🛒", "Buyurtmalarim 📂")
-main_menu.row("Sozlamalar ⚙️", "Hamyonim 💰")
+main_menu.row("Sozlamalar ⚙️", "Bot Haqida 📴")
 
 back_btn = KeyboardButton(text="ORQAGA 📵")
 cart_btn = KeyboardButton(text="Karzinka 🛒")   
@@ -53,8 +53,50 @@ def cart_products_murkub(items):
     for item in items:
         data = db.get_product_data(id=item[0])
         murkub.insert(KeyboardButton(f"❌ {data[1]} x{item[1]}"))
-    murkub.add("Tozalash 🗑", back_btn)
-    murkub.add(KeyboardButton(text="Buyurtma berish 📦"))
+    murkub.add("Tozalash 🗑","Buyurtma berish 📦")
+    murkub.add(back_btn)
     return murkub
+
+
+
+
+
+sozlamalar = ReplyKeyboardMarkup(resize_keyboard=True)
+sozlamalar.row("Rasm 📸", "Ism 👤")
+sozlamalar.row("Telefon ☎️", "Joylashuv 🏙")
+sozlamalar.add(back_btn)
+
+
+soz_phone = KeyboardButton(text="Yuborish ☎️", request_contact=True)
+soz_location = KeyboardButton(text="Yuborish 📍", request_location=True)
+soz_cancel = KeyboardButton(text="Bekor Qilish🟥")  
+
+Telefon_btn = ReplyKeyboardMarkup(resize_keyboard=True)
+Telefon_btn.add(soz_phone)
+Telefon_btn.add(soz_cancel)
+
+
+Location_Tanlash = ReplyKeyboardMarkup(resize_keyboard=True)
+Location_Tanlash.row("Avto Aniqlash 📍")
+Location_Tanlash.row("Yozish ✍️")
+Location_Tanlash.add(soz_cancel)
+
+
+Location_btn = ReplyKeyboardMarkup(resize_keyboard=True)
+Location_btn.add(soz_location)
+Location_btn.add(soz_cancel)
+
+
+
+
+
+
+
+about = ReplyKeyboardMarkup(resize_keyboard=True)
+about_cancel = KeyboardButton(text="Orqaga 🔙")
+
+about.row("Statistika 📊", "Admin 👮")
+about.row("Fikr qoldirish 〽️")
+about.row("Biz HaqimiZda ⚜️", about_cancel)
 
 

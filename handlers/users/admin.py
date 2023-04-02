@@ -8,7 +8,7 @@ from keyboards.default.admin import *
 from aiogram.dispatcher.storage import FSMContext
 from keyboards.default.menu import main_menu
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
-
+from aiogram.dispatcher.filters import Text
 
 
 cnt = 4
@@ -55,12 +55,14 @@ async def send_ad_to_all(message: types.Message):
 
 
 
-@dp.message_handler(text="/update", user_id=ADMINS, state="*")
+@dp.message_handler(Text(startswith="/update"), user_id=ADMINS, state="*")
 async def send_ad_to_all(message: types.Message):
     users = db.select_all_users()
+    vertion = message.text[7:]
+    msg = f"Bot Yangilandi🎉\n\nVertion: {vertion} ✅\n\nYangilanishdan Keyin bot yanada yaxshiroq ishlaydi 😎"
     for user in users:
         user_id = user[0]
-        await bot.send_message(chat_id=user_id, text="Bot yangilandi😍\n\nbotdan foydalanish uchun qaytadan /start buyrug'ini bering...")
+        await bot.send_message(chat_id=user_id, text=msg)
         await asyncio.sleep(0.05)
 
 
@@ -218,10 +220,9 @@ async def get_all_users(message: types.Message):
     db.delete_products()
     db.delete_Cart_items()
     db.delete_Carts()
+    db.delete_profiles()
     await message.answer("Bazadan Hammasi tozalandi ✅", reply_markup=admin)
     await ShopState.admin_panel.set()
-
-
 
 @dp.message_handler(text="Bekor qilish 🔴", user_id=ADMINS, state=Admin.del_all)
 async def get_all_users(message: types.Message):

@@ -63,6 +63,24 @@ async def get_phone_number(message: types.Message, state : FSMContext):
     await message.answer("TELEFON raqamingiz saqlandi, Endi Joylashuvingizni yuboring 🫡\n", reply_markup=murkub)
 
 
+
+
+
+@dp.message_handler(content_types=["location"], state=ShopState.cart)
+async def get_phone_location(message: types.Message, state: FSMContext):
+    full_name = message.from_user.full_name
+    lat = message.location.latitude
+    lon = message.location.longitude
+    await state.update_data({"lat" : lat,"lon" : lon})
+    data = await state.get_data()
+    phone = data.get("phone")
+    murkub = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    adres_topish = Nominatim(user_agent="GetLoc")
+    adres = adres_topish.reverse(f"{lat}, {lon}")
+    murkub.add(types.KeyboardButton(text="🟢Tastiqlash 🟢"), cancel)
+    await message.answer(f"BUYURURTMA BERISH \n\nBuyurtma beruvchi : {full_name}\n\ntelefon raqam : {phone}\n\n YETKAZIB BERISH\n   manzil : <b>{adres}</b>",reply_markup=murkub)
+
+
     
 
 
@@ -104,21 +122,6 @@ async def tasdiqlash(message: types.Message, state: FSMContext):
 
     await message.answer(msg, reply_markup=main_menu)
     await state.finish()
-
-
-@dp.message_handler(content_types=["location"], state=ShopState.cart)
-async def get_phone_location(message: types.Message, state: FSMContext):
-    full_name = message.from_user.full_name
-    lat = message.location.latitude
-    lon = message.location.longitude
-    await state.update_data({"lat" : lat,"lon" : lon})
-    data = await state.get_data()
-    phone = data.get("phone")
-    murkub = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    adres_topish = Nominatim(user_agent="GetLoc")
-    adres = adres_topish.reverse(f"{lat}, {lon}")
-    murkub.add(types.KeyboardButton(text="🟢Tastiqlash 🟢"), cancel)
-    await message.answer(f"BUYURURTMA BERISH \n\nBuyurtma beruvchi : {full_name}\n\ntelefon raqam : {phone}\n\n YETKAZIB BERISH\n   manzil : <b>{adres}</b>",reply_markup=murkub)
 
 
 

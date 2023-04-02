@@ -96,3 +96,15 @@ async def cancrel_order(message: types.Message, state: FSMContext):
 async def cancrel_order(message: types.Message, state: FSMContext):
     await message.answer("reklama BEKOR QILONDI 😥", reply_markup=admin)
     await ShopState.admin_panel.set()
+
+
+@dp.message_handler(text="ORQAGA 📵", state=ShopState.sozlamalar)
+async def cancrel_order(message: types.Message, state: FSMContext):
+    await message.answer("Asosiy menu 🌌", reply_markup=main_menu)
+    await state.finish()
+
+
+@dp.message_handler(text="Orqaga 🔙", state=ShopState.about)
+async def cancrel_order(message: types.Message, state: FSMContext):
+    await message.answer("Asosiy menu 🎇", reply_markup=main_menu)
+    await state.finish()

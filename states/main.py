@@ -9,6 +9,17 @@ class ShopState(StatesGroup):
     tolov = State()
     admin_panel = State()
     insert_category = State()
+    about = State()
+    about_faq = State()
+    sozlamalar = State()
+    soz_photo = State()
+    soz_name = State()
+    soz_username = State()
+    soz_phone = State()
+    soz_loc = State()
+    soz_loc_auto = State()
+    soz_loc_write = State()
+    
     
 class Admin(StatesGroup):
     del_users = State()

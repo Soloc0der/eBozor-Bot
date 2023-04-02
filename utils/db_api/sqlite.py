@@ -141,7 +141,7 @@ class Database:
         """
         self.execute(sql, parameters=(id, name, email, language), commit=True)
 
-    def add_profile(self, id: int, name: str,  username: str, photo: str = None, phone: int = None, loc: str = None):
+    def add_profile(self, id: int, name: str,  username: str, photo: str, phone: int, loc: str):
         sql = """
         INSERT INTO Profile(id, name, username, photo, phone, loc) VALUES(?, ?, ?, ?, ?, ?)
         """
@@ -221,12 +221,31 @@ class Database:
     def update_how_many_in_product(self, how_many: int, id: int):
         sql = """UPDATE Product SET how_many=? WHERE id=?;"""
         return self.execute(sql=sql, parameters=(how_many, id), commit=True)
+    
+
+    def sozlamalar_name(self, name, id):
+        sql = """UPDATE Profile SET name=? WHERE id=?;"""
+        return self.execute(sql=sql, parameters=(name, id), commit=True)
+
+
+    def sozlamalar_photo(self, photo, id):
+        sql = """UPDATE Profile SET photo=? WHERE id=?;"""
+        return self.execute(sql=sql, parameters=(photo, id), commit=True)
+
+
+    def sozlamalar_username(self, username, id):
+        sql = """UPDATE Profile SET username=? WHERE id=?;"""
+        return self.execute(sql=sql, parameters=(username, id), commit=True)
+
+    def sozlamalar_phone(self, phone, id):
+        sql = """UPDATE Profile SET phone=? WHERE id=?;"""
+        return self.execute(sql=sql, parameters=(phone, id), commit=True)
 
 
 
-    def delete_categoryes(self, id):
-        sql = """DELETE FROM categoryes WHERE id=?;"""
-        self.execute(sql=sql, parameters=(id,), commit=True)
+    def sozlamalar_location(self, loc, id):
+        sql = """UPDATE Profile SET loc=? WHERE id=?;"""
+        return self.execute(sql=sql, parameters=(loc, id), commit=True)
 
 
 
@@ -251,6 +270,7 @@ class Database:
         self.execute(sql=sql, parameters=(cart_id,), commit=True)
 
 
+
     def delete_product_from_cart(self, product_id, cart_id):
         sql = """DELETE FROM CartItem WHERE product_id=? AND cart_id=?;"""
         self.execute(sql=sql, parameters=(product_id, cart_id), commit=True)
@@ -271,11 +291,28 @@ class Database:
 
 
 
+    def select_all_profiles(self):
+        sql = """
+        SELECT * FROM Profile;
+        """
+        return self.execute(sql, fetchall=True)
+
+
     def select_all_cats(self):
         sql = """
         SELECT * FROM categoryes;
         """
         return self.execute(sql, fetchall=True)
+
+
+
+    def select_profile(self, **kwargs):
+        # SQL_EXAMPLE = "SELECT * FROM Users where id=1 AND Name='John'"
+        sql = "SELECT * FROM Profile WHERE "
+        sql, parameters = self.format_args(sql, kwargs)
+
+        return self.execute(sql, parameters=parameters, fetchone=True)
+
 
     def select_user(self, **kwargs):
         # SQL_EXAMPLE = "SELECT * FROM Users where id=1 AND Name='John'"
@@ -321,6 +358,11 @@ class Database:
 
     def count_users(self):
         return self.execute("SELECT COUNT(*) FROM Users;", fetchone=True)
+    def count_cats(self):
+        return self.execute("SELECT COUNT(*) FROM categoryes;", fetchone=True)
+    def count_products(self):
+        return self.execute("SELECT COUNT(*) FROM Product;", fetchone=True)
+    
 
     def update_user_email(self, email, id):
         # SQL_EXAMPLE = "UPDATE Users SET email=mail@gmail.com WHERE id=12345"
@@ -329,6 +371,11 @@ class Database:
         UPDATE Users SET email=? WHERE id=?
         """
         return self.execute(sql, parameters=(email, id), commit=True)
+
+    def delete_categoryes(self, id):
+        sql = """DELETE FROM categoryes WHERE id=?;"""
+        self.execute(sql=sql, parameters=(id,), commit=True)
+
 
     def delete_users(self):
         self.execute("DELETE FROM Users WHERE TRUE", commit=True)
@@ -344,6 +391,10 @@ class Database:
 
     def delete_products(self):
         self.execute("DELETE FROM Product WHERE TRUE", commit=True)
+
+    def delete_profiles(self):
+        self.execute("DELETE FROM Profile WHERE TRUE", commit=True)
+
 
 
 def logger(statement):

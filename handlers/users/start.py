@@ -20,8 +20,7 @@ async def bot_start(message: types.Message, state: FSMContext):
         db.add_user(id=message.from_user.id,
                     name=name)
         db.add_user_cart(user_id=message.from_user.id)
-        db.add_profile(id=message.from_user.id, name=name, username=message.from_user.username)
-
+        db.add_profile(id=message.from_user.id, name=name, username=message.from_user.username, photo=None, phone=None, loc=None)
 
         await message.answer(f"Xush kelibsiz! {name}", reply_markup=main_menu)
         
@@ -31,6 +30,9 @@ async def bot_start(message: types.Message, state: FSMContext):
         await bot.send_message(chat_id=ADMINS[0], text=msg)
 
     except sqlite3.IntegrityError as err:
-        db.add_profile(id=message.from_user.id, name=name, username=message.from_user.username)
         await bot.send_message(chat_id=ADMINS[0], text=f"{name} bazaga oldin qo'shilgan")
         await message.answer(f"Xush kelibsiz! {name}", reply_markup=main_menu)
+
+        
+
+
