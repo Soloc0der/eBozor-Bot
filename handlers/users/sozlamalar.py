@@ -13,9 +13,9 @@ async def rasmni_sozlash(message: types.Message):
     await message.answer ("Profil uchun O'rnatmoqchi bo'lgan Rasmingizni yuboring :) ", reply_markup=ReplyKeyboardRemove())
     await ShopState.soz_photo.set()
 
-
 @dp.message_handler(content_types=["photo"], state=ShopState.soz_photo)
 async def get_photo(message: types.Message, state: FSMContext):
+    print(message)
     soz_photo = message.photo[-1].file_id
     print(soz_photo)
     db.sozlamalar_photo(photo=soz_photo, id=message.from_user.id)
@@ -29,7 +29,7 @@ async def get_photo(message: types.Message, state: FSMContext):
     username = malumot[2]
     photo = malumot[3]
     if photo == None:
-        photo = "AgACAgIAAxkBAAIF7GQopd5cSghCN6MtilA1QxcO34MPAAJTyTEbAAEISUlIesPjHCIAAV4BAAMCAANzAAMvBA"
+        photo = "AgACAgIAAxkBAAInUGQqYtru_HaRgXIO4BIf8-lzUtuNAAIYyDEb8ytQSQwqIL_q0ZgsAQADAgADcwADLwQ"
     phone = malumot[4]
     if phone == None:
         phone = "Kiritilmagan!"
@@ -63,7 +63,7 @@ async def get_photo(message: types.Message):
     username = malumot[2]
     photo = malumot[3]
     if photo == None:
-        photo = "AgACAgIAAxkBAAIF7GQopd5cSghCN6MtilA1QxcO34MPAAJTyTEbAAEISUlIesPjHCIAAV4BAAMCAANzAAMvBA"
+        photo = "AgACAgIAAxkBAAInUGQqYtru_HaRgXIO4BIf8-lzUtuNAAIYyDEb8ytQSQwqIL_q0ZgsAQADAgADcwADLwQ"
     phone = malumot[4]
     if phone == None:
         phone = "Kiritilmagan!"
@@ -94,7 +94,7 @@ async def get_phone_number(message: types.Message, state : FSMContext):
     username = malumot[2]
     photo = malumot[3]
     if photo == None:
-        photo = "AgACAgIAAxkBAAIF7GQopd5cSghCN6MtilA1QxcO34MPAAJTyTEbAAEISUlIesPjHCIAAV4BAAMCAANzAAMvBA"
+        photo ="AgACAgIAAxkBAAInUGQqYtru_HaRgXIO4BIf8-lzUtuNAAIYyDEb8ytQSQwqIL_q0ZgsAQADAgADcwADLwQ"
     phone = malumot[4]
     if phone == None:
         phone = "Kiritilmagan!"
@@ -143,7 +143,7 @@ async def get_phone_location(message: types.Message, state: FSMContext):
     username = malumot[2]
     photo = malumot[3]
     if photo == None:
-        photo = "AgACAgIAAxkBAAIF7GQopd5cSghCN6MtilA1QxcO34MPAAJTyTEbAAEISUlIesPjHCIAAV4BAAMCAANzAAMvBA"
+        photo = "AgACAgIAAxkBAAInUGQqYtru_HaRgXIO4BIf8-lzUtuNAAIYyDEb8ytQSQwqIL_q0ZgsAQADAgADcwADLwQ"
     phone = malumot[4]
     if phone == None:
         phone = "Kiritilmagan!"
@@ -177,7 +177,7 @@ async def get_photo(message: types.Message):
     username = malumot[2]
     photo = malumot[3]
     if photo == None:
-        photo = "AgACAgIAAxkBAAIF7GQopd5cSghCN6MtilA1QxcO34MPAAJTyTEbAAEISUlIesPjHCIAAV4BAAMCAANzAAMvBA"
+        photo = "AgACAgIAAxkBAAInUGQqYtru_HaRgXIO4BIf8-lzUtuNAAIYyDEb8ytQSQwqIL_q0ZgsAQADAgADcwADLwQ"
     phone = malumot[4]
     if phone == None:
         phone = "Kiritilmagan!"

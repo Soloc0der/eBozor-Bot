@@ -51,8 +51,9 @@ async def bot_echo(message: types.Message, state: FSMContext):
     name = malumot[1]
     username = malumot[2]
     photo = malumot[3]
+
     if photo == None:
-        photo = "AgACAgIAAxkBAAIF7GQopd5cSghCN6MtilA1QxcO34MPAAJTyTEbAAEISUlIesPjHCIAAV4BAAMCAANzAAMvBA"
+        photo = "AgACAgIAAxkBAAInUGQqYtru_HaRgXIO4BIf8-lzUtuNAAIYyDEb8ytQSQwqIL_q0ZgsAQADAgADcwADLwQ"
     phone = malumot[4]
     if phone == None:
         phone = "Kiritilmagan!"
