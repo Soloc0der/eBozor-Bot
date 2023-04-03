@@ -28,8 +28,9 @@ async def  Statistic(message: types.Message):
     users_count = db.count_users()[0]
     cats_count = db.count_cats()[0]
     product_count = db.count_products()[0]
+    zakazlar_count = db.count_zakazlar()[0]
 
-    msg = f"Assalomu aleykum  🐵\n\nBot Statistikasi 📊\n\nFoydalanuvchilar: {users_count} 🙍🏻\nModellar: {cats_count} 🍏\nMahsulotlar: {product_count} 📱\n\n  Qo'shimcha Ma'lumotlar uchun admin ga Murojat qiling ✅"
+    msg = f"Assalomu aleykum  🐵\n\nBot Statistikasi 📊\n\nFoydalanuvchilar: {users_count} 🙍🏻\nModellar: {cats_count} 🍏\nMahsulotlar: {product_count} 📱\n\nBuyurtmalar: {zakazlar_count} 📦\n\n  Qo'shimcha Ma'lumotlar uchun admin ga Murojat qiling ✅"
     await message.answer(msg)
 
 

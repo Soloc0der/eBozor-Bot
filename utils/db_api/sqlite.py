@@ -362,6 +362,8 @@ class Database:
         return self.execute("SELECT COUNT(*) FROM categoryes;", fetchone=True)
     def count_products(self):
         return self.execute("SELECT COUNT(*) FROM Product;", fetchone=True)
+    def count_zakazlar(self):
+        return self.execute("SELECT COUNT(*) FROM zakazlar;", fetchone=True)
     
 
     def update_user_email(self, email, id):
