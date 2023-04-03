@@ -149,8 +149,7 @@ async def get_phone_location(message: types.Message, state: FSMContext):
         phone = "Kiritilmagan!"
 
 
-    loc_aniqla = "Nurli yol ko'shesi, Buston MPJ, Qızılyulduz, Mańǵıt, Ámiwdárya rayonı, Qaraqalpaqstan Respublikası, 230700, Oʻzbekiston"
-    loc = loc_aniqla.split(sep=", ")
+    loc = str(malumot[5]).split(sep=", ")
     kocha = loc[0]
     shahar = loc[3]
     tuman = loc[4]
@@ -158,9 +157,8 @@ async def get_phone_location(message: types.Message, state: FSMContext):
     respublika = loc[7]
     location = f"{respublika} Respublikasi, {viloyat}, {tuman}, {shahar}, {kocha}, ➰"
 
-
     if loc == None:
-        loc = "Kiritilmagan!"
+        location = "Kiritilmagan!"
 
     msg = f"Sizning <b>Profil</b>ingiz ! \n\nIsm: {name} 👤\nUsername: @{username} 📨\n\nTelefon Raqam: +{phone} ☎️\n\nJoylashuv: {location} 🏙"
     await message.answer_photo(photo=photo, caption=msg, reply_markup=sozlamalar)
