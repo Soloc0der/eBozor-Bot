@@ -3,7 +3,7 @@ from states.main import *
 from loader import dp, db
 
 from aiogram.dispatcher.storage import FSMContext
-from keyboards.default.menu import main_menu, cats_markup, back_btn, cart_btn
+from keyboards.default.menu import *
 from keyboards.default.admin import *
 
 @dp.message_handler(text="ORQAGA 📵", state=ShopState.product)
@@ -108,3 +108,27 @@ async def cancrel_order(message: types.Message, state: FSMContext):
 async def cancrel_order(message: types.Message, state: FSMContext):
     await message.answer("Asosiy menu 🎇", reply_markup=main_menu)
     await state.finish()
+
+
+@dp.message_handler(text="Bekor Qilish🟥", state=ShopState.soz_loc)
+async def cancrel_order(message: types.Message, state: FSMContext):
+    await message.answer("sozlamalar ⚙️", reply_markup=sozlamalar)
+    await ShopState.sozlamalar.set()
+
+
+@dp.message_handler(text="Bekor Qilish🟥", state=ShopState.soz_loc_auto)
+async def cancrel_order(message: types.Message, state: FSMContext):
+    await message.answer("Joylashuvni sozlash uchun tanlanG... ", reply_markup=Location_Tanlash)
+    await ShopState.soz_loc.set()
+
+@dp.message_handler(text="Bekor Qilish🟥", state=ShopState.soz_loc_write)
+async def cancrel_order(message: types.Message, state: FSMContext):
+    await message.answer("Joylashuvni sozlash uchun tanlanG... ", reply_markup=Location_Tanlash)
+    await ShopState.soz_loc.set()
+
+
+@dp.message_handler(text="Bekor Qilish🟥", state=ShopState.soz_phone)
+async def cancrel_order(message: types.Message, state: FSMContext):
+    await message.answer("sozlamalar ⚙️", reply_markup=sozlamalar)
+    await ShopState.sozlamalar.set()
+

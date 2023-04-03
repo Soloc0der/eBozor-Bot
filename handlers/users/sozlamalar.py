@@ -94,7 +94,7 @@ async def get_phone_number(message: types.Message, state : FSMContext):
     username = malumot[2]
     photo = malumot[3]
     if photo == None:
-        photo ="AgACAgIAAxkBAAInUGQqYtru_HaRgXIO4BIf8-lzUtuNAAIYyDEb8ytQSQwqIL_q0ZgsAQADAgADcwADLwQ"
+        photo = "AgACAgIAAxkBAAInUGQqYtru_HaRgXIO4BIf8-lzUtuNAAIYyDEb8ytQSQwqIL_q0ZgsAQADAgADcwADLwQ"
     phone = malumot[4]
     if phone == None:
         phone = "Kiritilmagan!"
@@ -147,11 +147,22 @@ async def get_phone_location(message: types.Message, state: FSMContext):
     phone = malumot[4]
     if phone == None:
         phone = "Kiritilmagan!"
-    loc = malumot[5]
+
+
+    loc_aniqla = "Nurli yol ko'shesi, Buston MPJ, Qızılyulduz, Mańǵıt, Ámiwdárya rayonı, Qaraqalpaqstan Respublikası, 230700, Oʻzbekiston"
+    loc = loc_aniqla.split(sep=", ")
+    kocha = loc[0]
+    shahar = loc[3]
+    tuman = loc[4]
+    viloyat = loc[5]
+    respublika = loc[7]
+    location = f"{respublika} Respublikasi, {viloyat}, {tuman}, {shahar}, {kocha}, ➰"
+
+
     if loc == None:
         loc = "Kiritilmagan!"
 
-    msg = f"Sizning <b>Profil</b>ingiz ! \n\nIsm: {name} 👤\nUsername: @{username} 📨\n\nTelefon Raqam: +{phone} ☎️\n\nJoylashuv: {loc} 🏙"
+    msg = f"Sizning <b>Profil</b>ingiz ! \n\nIsm: {name} 👤\nUsername: @{username} 📨\n\nTelefon Raqam: +{phone} ☎️\n\nJoylashuv: {location} 🏙"
     await message.answer_photo(photo=photo, caption=msg, reply_markup=sozlamalar)
 
 
@@ -161,7 +172,7 @@ async def get_phone_location(message: types.Message, state: FSMContext):
 
 @dp.message_handler(text="Yozish ✍️", state=ShopState.soz_loc)
 async def  buyurtma_berish(message: types.Message):
-    await message.answer("<b>Yozish ✍️ </b> Bo'lim tanlandi ✅ \n\nBizga Ozingiz qayerda ekanligingizni Aniq qilib yozishingiz kerak❗️❕\n<code>Masalan: O''zbekiston RES, *** tuman, *** shahar, ** ko'cha, ??-uy</code>\n\n⚠️ Ogohlantirish Manzilni Xato kiritish jiddiy Muammmolarga sabab bo'lishi mumkin ⚠️", reply_markup=back_btn)
+    await message.answer("<b>Yozish ✍️ </b> Bo'lim tanlandi ✅ \n\nBizga Ozingiz qayerda ekanligingizni Aniq qilib yozishingiz kerak❗️❕\n<code>Masalan: O''zbekiston RES, *** tuman, *** shahar, ** ko'cha, ??-uy</code>\n\n⚠️ Ogohlantirish Manzilni Xato kiritish jiddiy Muammmolarga sabab bo'lishi mumkin ⚠️", reply_markup=ReplyKeyboardRemove())
     await ShopState.soz_loc_write.set()
 
 
@@ -187,4 +198,5 @@ async def get_photo(message: types.Message):
 
     msg = f"Sizning <b>Profil</b>ingiz ! \n\nIsm: {name} 👤\nUsername: @{username} 📨\n\nTelefon Raqam: {phone} ☎️\n\nJoylashuv: {loc} 🏙"
     await message.answer_photo(photo=photo, caption=msg)
+    
 

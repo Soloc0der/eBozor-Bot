@@ -1,6 +1,7 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from loader import db
 
+soz_loc_back = KeyboardButton(text="Bekor Qilish🟥")
 
 main_menu = ReplyKeyboardMarkup(resize_keyboard=True)
 
